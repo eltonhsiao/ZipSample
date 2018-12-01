@@ -43,39 +43,39 @@ namespace ZipSample.test
                 new Girl{Name="leo", Age = 25}
             };
 
-            var actual = MyUnion1(first, second, new GirlComparer()).ToList();
+            var actual = MyUnion(first, second, new GirlComparer()).ToList();
             expected.ToExpectedObject().ShouldEqual(actual);
         }
 
         private IEnumerable<int> MyUnion(IEnumerable<int> first, IEnumerable<int> second)
         {
-            //return MyUnion1(first, second, EqualityComparer<int>.Default);
-            var firstEnumerator = first.GetEnumerator();
-            var secondEnumerator = second.GetEnumerator();
-            var result = new HashSet<int>();
+            return MyUnion(first, second, EqualityComparer<int>.Default);
+            //var firstEnumerator = first.GetEnumerator();
+            //var secondEnumerator = second.GetEnumerator();
+            //var result = new HashSet<int>();
 
-            while (firstEnumerator.MoveNext())
-            {
-                if (result.Add(firstEnumerator.Current))
-                {
-                    yield return firstEnumerator.Current;
-                }
-            }
+            //while (firstEnumerator.MoveNext())
+            //{
+            //    if (result.Add(firstEnumerator.Current))
+            //    {
+            //        yield return firstEnumerator.Current;
+            //    }
+            //}
 
-            while (secondEnumerator.MoveNext())
-            {
-                if (result.Add(secondEnumerator.Current))
-                {
-                    yield return secondEnumerator.Current;
-                }
-            }
+            //while (secondEnumerator.MoveNext())
+            //{
+            //    if (result.Add(secondEnumerator.Current))
+            //    {
+            //        yield return secondEnumerator.Current;
+            //    }
+            //}
         }
 
-        private IEnumerable<Girl> MyUnion1(IEnumerable<Girl> first, IEnumerable<Girl> second, IEqualityComparer<Girl> girlComparer)
+        private IEnumerable<TResult> MyUnion<TResult>(IEnumerable<TResult> first, IEnumerable<TResult> second, IEqualityComparer<TResult> girlComparer)
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
-            var result = new HashSet<Girl>(girlComparer);
+            var result = new HashSet<TResult>(girlComparer);
 
             while (firstEnumerator.MoveNext())
             {
