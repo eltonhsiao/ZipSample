@@ -43,12 +43,13 @@ namespace ZipSample.test
                 new Girl{Name="leo", Age = 25}
             };
 
-            var actual = MyUnion1(first, second).ToList();
+            var actual = MyUnion1(first, second, new GirlComparer()).ToList();
             expected.ToExpectedObject().ShouldEqual(actual);
         }
 
         private IEnumerable<int> MyUnion(IEnumerable<int> first, IEnumerable<int> second)
         {
+            //return MyUnion1(first, second, EqualityComparer<int>.Default);
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
             var result = new HashSet<int>();
@@ -70,11 +71,11 @@ namespace ZipSample.test
             }
         }
 
-        private IEnumerable<Girl> MyUnion1(IEnumerable<Girl> first, IEnumerable<Girl> second)
+        private IEnumerable<Girl> MyUnion1(IEnumerable<Girl> first, IEnumerable<Girl> second, IEqualityComparer<Girl> girlComparer)
         {
             var firstEnumerator = first.GetEnumerator();
             var secondEnumerator = second.GetEnumerator();
-            var result = new HashSet<Girl>(new GirlComparer());
+            var result = new HashSet<Girl>(girlComparer);
 
             while (firstEnumerator.MoveNext())
             {
@@ -103,7 +104,8 @@ namespace ZipSample.test
 
         public int GetHashCode(Girl obj)
         {
-            return obj.Name.GetHashCode();
+            return new { obj.Name, obj.Age }.GetHashCode();
+            //return obj.Name.GetHashCode() + obj.Age.GetHashCode();
         }
     }
 }
